@@ -22,7 +22,7 @@ public class Category {
 
     private int level;
 
-    private Category(){
+    public Category(){
 
     }
 
