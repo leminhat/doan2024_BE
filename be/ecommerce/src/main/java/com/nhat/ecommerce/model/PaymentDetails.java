@@ -4,5 +4,5 @@ public class PaymentDetails {
 
     private PaymentMethod paymentMethod ;
     private PaymentStatus status;
-    private String pay;
+    private String paymentId;
 }
