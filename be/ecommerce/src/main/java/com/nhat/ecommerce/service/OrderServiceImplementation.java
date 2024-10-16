@@ -5,9 +5,12 @@ import com.nhat.ecommerce.model.Address;
 import com.nhat.ecommerce.model.Order;
 import com.nhat.ecommerce.model.User;
 import com.nhat.ecommerce.repository.CartRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class OrderServiceImplementation implements OrderService{
 
     private CartRepository cartRepository;
@@ -15,6 +18,7 @@ public class OrderServiceImplementation implements OrderService{
     private ProductService productService;
 
 
+    @Autowired
     public OrderServiceImplementation(CartRepository cartRepository,
                                       CartService cartService, ProductService productService){
 

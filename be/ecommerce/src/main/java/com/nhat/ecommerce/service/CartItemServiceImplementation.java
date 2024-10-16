@@ -8,7 +8,11 @@ import com.nhat.ecommerce.model.Product;
 import com.nhat.ecommerce.model.User;
 import com.nhat.ecommerce.repository.CartItemRepository;
 import com.nhat.ecommerce.repository.CartRepository;
+import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
+@Service
 public class CartItemServiceImplementation implements CartItemService{
 
     public CartItemRepository cartItemRepository;
@@ -46,16 +50,45 @@ public class CartItemServiceImplementation implements CartItemService{
             item.setDiscountedPrice(item.getProduct().getDiscountedPrice()*cartItem.getQuantity());
         }
 
-        return null;
+        return cartItemRepository.save(item);
     }
 
     @Override
-    public CartItem isCardItemExist(Cart cart, Product product, String size, Long UserId) throws CartItemException {
-        return null;
+    public CartItem isCardItemExist(Cart cart, Product product, String size, Long userId)  {
+
+        CartItem cartItem = cartItemRepository.isCartItemExits(cart,product,size, userId);
+        return cartItem;
     }
 
     @Override
-    public CartItem removeCartItem(Long userId, Long cartItemId) throws CartItemException, UserException {
-        return null;
+    public void removeCartItem(Long userId, Long cartItemId) throws CartItemException, UserException {
+
+        CartItem cartItem = findCartItemById(cartItemId);
+
+        User user = userService.findUserById(cartItem.getUserId());
+
+        User reqUser = userService.findUserById(userId);
+
+        if(user.getId()==reqUser.getId()){
+            cartItemRepository.delete(cartItem);
+
+        }
+        else{
+         throw new CartItemException("User can't remove another users  item");
+        }
     }
+
+    @Override
+    public CartItem findCartItemById(Long cartItemId) throws CartItemException {
+        Optional<CartItem> opt = cartItemRepository.findById(cartItemId);
+
+        if(opt.isPresent()){
+            return opt.get();
+        }
+
+        throw new CartItemException("cartItem not found with id: " + cartItemId);
+    }
+
+
+
 }

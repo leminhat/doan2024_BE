@@ -14,13 +14,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImplementation implements ProductService {
+
+
+    @Override
+    public List<Product> findProductsByCategory() {
+        return List.of();
+    }
 
     private ProductRepository productRepository;
     private CategoryRepository categoryRepository;
@@ -118,14 +123,12 @@ public class ProductServiceImplementation implements ProductService {
         throw new ProductException("Product not found with id " + id);
     }
 
-    @Override
-    public List<Product> findProductsByCategory() {
-        return List.of();
-    }
+
+
 
     @Override
-    public Page<Product> getAllProduct(String category, List<String> colors, List<String> sizes, Integer page, Integer minPrice, Integer maxPrice,
-                                       Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
+    public Page<Product> getAllProduct(String category, List<String> colors, List<String> sizes, Integer minPrice, Integer maxPrice,
+                                       Integer minDiscount,String sort, String stock, Integer pageNumber, Integer pageSize) {
 
         Pageable pageable = PageRequest.of(pageNumber,pageSize);
 
@@ -148,5 +151,10 @@ public class ProductServiceImplementation implements ProductService {
         List<Product> pageContent = products.subList(startIndex,endIndex);
         Page<Product> filteredProducts = new PageImpl<>(pageContent,pageable,products.size());
         return filteredProducts;
+    }
+
+    @Override
+    public List<Product> findAllProducts() {
+        return productRepository.findAll();
     }
 }

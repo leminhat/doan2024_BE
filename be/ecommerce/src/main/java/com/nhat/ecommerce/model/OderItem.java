@@ -30,6 +30,10 @@ public class OderItem {
 
     private LocalDateTime deliveryDate;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false) // Tên cột trong cơ sở dữ liệu
+    private Order order;
+
     public OderItem() {
 
     }

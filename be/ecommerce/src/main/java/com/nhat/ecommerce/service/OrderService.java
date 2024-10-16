@@ -4,9 +4,11 @@ import com.nhat.ecommerce.exception.OrderException;
 import com.nhat.ecommerce.model.Address;
 import com.nhat.ecommerce.model.Order;
 import com.nhat.ecommerce.model.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface OrderService {
 
     public Order createOrder(User user, Address shippingaddress);

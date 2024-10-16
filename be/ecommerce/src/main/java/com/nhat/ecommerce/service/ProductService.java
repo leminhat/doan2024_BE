@@ -4,9 +4,12 @@ import com.nhat.ecommerce.exception.ProductException;
 import com.nhat.ecommerce.model.Product;
 import com.nhat.ecommerce.request.CreateProductRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+@Service
 public interface ProductService {
     public Product createProduct(CreateProductRequest req);
 
@@ -18,9 +21,9 @@ public interface ProductService {
 
     public List<Product> findProductsByCategory();
 
-    public Page<Product> getAllProduct(String category, List<String> colors,List<String>sizes, Integer page, Integer minPrice,Integer maxPrice,
+    public Page<Product> getAllProduct(String category, List<String> colors,List<String>sizes, Integer minPrice,Integer maxPrice,
                                        Integer minDiscount,String sort, String stoke, Integer pageNumber,Integer pageSize );
 
-
+    public List<Product> findAllProducts();
 
 }
