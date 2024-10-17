@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class OderItem {
+public class    OrderItem {
 
 
     @Id
@@ -30,15 +30,18 @@ public class OderItem {
 
     private LocalDateTime deliveryDate;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_id", nullable = false) // Tên cột trong cơ sở dữ liệu
     private Order order;
 
-    public OderItem() {
+
+
+    public OrderItem() {
 
     }
 
-    public OderItem(Long id, Product product, String size, int quantity, Integer price, Integer discountedPrice, Long userId, LocalDateTime deliveryDate) {
+    public OrderItem(Long id, Product product, String size, int quantity, Integer price, Integer discountedPrice, Long userId, LocalDateTime deliveryDate) {
         this.id = id;
         this.product = product;
         this.size = size;
@@ -111,5 +114,13 @@ public class OderItem {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/cart")
-@Tag(name ="Cart Management",description="find user cart, add item to cart")
+//@Tag(name ="Cart Management",description="find user cart, add item to cart")
 public class CartController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class CartController {
 
 
     @GetMapping("/")
-    @Operation(description = "find dart by user id")
+//    @Operation(description = "find dart by user id")
     public ResponseEntity<Cart> findUserCart(@RequestHeader("Authorization") String jwt) throws UserException {
 
         User user = userService.findUserProfileByJwt(jwt);

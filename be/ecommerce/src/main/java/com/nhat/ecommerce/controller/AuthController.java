@@ -2,10 +2,12 @@ package com.nhat.ecommerce.controller;
 
 
 import com.nhat.ecommerce.config.JwtProvider;
+import com.nhat.ecommerce.model.Cart;
 import com.nhat.ecommerce.model.User;
 import com.nhat.ecommerce.repository.UserRepository;
 import com.nhat.ecommerce.request.LoginRequest;
 import com.nhat.ecommerce.response.AuthRespone;
+import com.nhat.ecommerce.service.CartService;
 import com.nhat.ecommerce.service.CustomerUserServiceImplementation;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,13 +33,15 @@ public class AuthController {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private CustomerUserServiceImplementation customerUserService;
+    private CartService cartService;
 
     public AuthController(UserRepository userRepository, CustomerUserServiceImplementation customerUserService,
-                          PasswordEncoder passwordEncoder, JwtProvider jwtProvider) {
+                          PasswordEncoder passwordEncoder, JwtProvider jwtProvider,  CartService cartService) {
         this.userRepository = userRepository;
         this.customerUserService = customerUserService;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider=jwtProvider;
+        this.cartService=cartService;
     }
 
 
@@ -62,6 +66,7 @@ public class AuthController {
         createdUser.setLastname(lastString);
 
         User savedUser=userRepository.save(createdUser);
+        Cart cart = cartService.createCart(savedUser);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -31,7 +31,7 @@ public class OrderController {
 
         User user = userService.findUserProfileByJwt(jwt);
 
-        Order order = orderService.createOrder(user, shippingAddress);
+        Order order = orderService.createOrder(user,shippingAddress);
 
         System.out.println("order"+order);
 
@@ -49,7 +49,7 @@ public class OrderController {
     }
 
     @GetMapping("/{Id}")
-    public ResponseEntity<Order> findOrderById(@PathVariable Long Id
+    public ResponseEntity<Order> findOrderById(@PathVariable("Id") Long Id
             , @RequestHeader("Authorization") String jwt) throws UserException, OrderException {
 
         User user = userService.findUserProfileByJwt(jwt);

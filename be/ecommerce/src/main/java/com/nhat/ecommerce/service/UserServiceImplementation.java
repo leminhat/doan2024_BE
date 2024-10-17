@@ -39,6 +39,6 @@ public class UserServiceImplementation implements UserService {
             throw new UserException("User not found with email: " + email);
 
         }
-        return null;
+        return user;
     }
 }

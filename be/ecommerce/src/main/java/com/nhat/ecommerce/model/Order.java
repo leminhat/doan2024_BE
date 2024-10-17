@@ -21,7 +21,7 @@ public class Order {
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OderItem> orderItems = new ArrayList<>();
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     private LocalDateTime orderDate;
 
@@ -49,7 +49,7 @@ public class Order {
 
     }
 
-    public Order(Long id, String orderId, User user, List<OderItem> orderItems, LocalDateTime orderDate, LocalDateTime deliveryDate, Address shippingAddress, Double totalPrice, PaymentDetails paymentDetails, Integer toltalDiscountedPrice, Integer discounte, String orderStatus, int totalItem, LocalDateTime createAt) {
+    public Order(Long id, String orderId, User user, List<OrderItem> orderItems, LocalDateTime orderDate, LocalDateTime deliveryDate, Address shippingAddress, Double totalPrice, PaymentDetails paymentDetails, Integer toltalDiscountedPrice, Integer discounte, String orderStatus, int totalItem, LocalDateTime createAt) {
         this.id = id;
         this.orderId = orderId;
         this.user = user;
@@ -90,11 +90,11 @@ public class Order {
         this.user = user;
     }
 
-    public List<OderItem> getOrderItems() {
+    public List<OrderItem> getOrderItems() {
         return orderItems;
     }
 
-    public void setOrderItems(List<OderItem> orderItems) {
+    public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
 
