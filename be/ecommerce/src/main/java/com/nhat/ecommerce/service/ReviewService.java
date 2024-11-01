@@ -2,7 +2,7 @@ package com.nhat.ecommerce.service;
 
 import com.nhat.ecommerce.exception.ProductException;
 import com.nhat.ecommerce.model.Review;
-import com.nhat.ecommerce.model.ReviewRequest;
+import com.nhat.ecommerce.request.ReviewRequest;
 import com.nhat.ecommerce.model.User;
 import org.springframework.stereotype.Service;
 

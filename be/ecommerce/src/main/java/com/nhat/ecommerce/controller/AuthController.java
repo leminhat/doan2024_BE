@@ -86,7 +86,7 @@ public class AuthController {
         String username = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
-        Authentication authentication = authenctiate(username,password);
+        Authentication authentication = authenticate(username,password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);
@@ -97,7 +97,7 @@ public class AuthController {
 
     }
 
-    private Authentication authenctiate(String username, String password) {
+    private Authentication authenticate(String username, String password) {
 
         UserDetails userDetails = customerUserService.loadUserByUsername(username);
         if (userDetails==null){

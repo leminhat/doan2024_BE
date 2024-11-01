@@ -3,7 +3,7 @@ package com.nhat.ecommerce.controller;
 import com.nhat.ecommerce.exception.ProductException;
 import com.nhat.ecommerce.exception.UserException;
 import com.nhat.ecommerce.model.Review;
-import com.nhat.ecommerce.model.ReviewRequest;
+import com.nhat.ecommerce.request.ReviewRequest;
 import com.nhat.ecommerce.model.User;
 import com.nhat.ecommerce.service.ReviewService;
 import com.nhat.ecommerce.service.UserService;

@@ -3,7 +3,7 @@ package com.nhat.ecommerce.service;
 import com.nhat.ecommerce.exception.ProductException;
 import com.nhat.ecommerce.model.Product;
 import com.nhat.ecommerce.model.Rating;
-import com.nhat.ecommerce.model.RatingRequest;
+import com.nhat.ecommerce.request.RatingRequest;
 import com.nhat.ecommerce.model.User;
 import com.nhat.ecommerce.repository.RatingRepository;
 import org.springframework.stereotype.Service;

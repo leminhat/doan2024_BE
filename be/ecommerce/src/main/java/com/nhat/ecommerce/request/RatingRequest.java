@@ -1,4 +1,4 @@
-package com.nhat.ecommerce.model;
+package com.nhat.ecommerce.request;
 
 public class RatingRequest {
     private Long productId;
