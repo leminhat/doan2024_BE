@@ -9,21 +9,19 @@ import com.nhat.ecommerce.request.LoginRequest;
 import com.nhat.ecommerce.response.AuthRespone;
 import com.nhat.ecommerce.service.CartService;
 import com.nhat.ecommerce.service.CustomerUserServiceImplementation;
-import org.springframework.http.HttpHeaders;
+import com.nhat.ecommerce.service.PwResetService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -34,6 +32,10 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     private CustomerUserServiceImplementation customerUserService;
     private CartService cartService;
+
+    @Autowired
+    private PwResetService passwordResetService;
+
 
     public AuthController(UserRepository userRepository, CustomerUserServiceImplementation customerUserService,
                           PasswordEncoder passwordEncoder, JwtProvider jwtProvider,  CartService cartService) {
@@ -110,6 +112,23 @@ public class AuthController {
 
 
         return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+    }
+
+    @PostMapping("/forgotpass")
+    public ResponseEntity<?> forgotPassword(@RequestBody User user) {
+        String email=user.getEmail();
+        System.out.println("email nhan duoc " +email);
+        passwordResetService.initiatePasswordReset(email);
+        return ResponseEntity.ok("Email đặt lại mật khẩu đã được gửi!");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword( @RequestBody Map<String,String> body) {
+        String token1 = body.get("token");
+        passwordResetService.resetPassword(token1,body.get("newPassword") );
+        System.out.println("newPass");
+
+        return ResponseEntity.ok("Mật khẩu đã được cập nhật thành công!");
     }
 
 }

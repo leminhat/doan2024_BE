@@ -12,7 +12,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -23,7 +22,14 @@ public class AppConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeHttpRequests(Authorize -> Authorize.requestMatchers("/api/**").authenticated().anyRequest().permitAll())
+                .authorizeHttpRequests(Authorize -> Authorize
+                        .requestMatchers("/auth/forgotpass**").permitAll()
+                        .requestMatchers("/auth/signin**").permitAll()
+                        .requestMatchers("/auth/signup**").permitAll()
+                        .requestMatchers("/auth/reset-password**").permitAll()
+                        .anyRequest().authenticated())
+//
+//                        .requestMatchers("/api/**").authenticated())
                 .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
                 .csrf().disable()
                 .cors().configurationSource(new CorsConfigurationSource() {
