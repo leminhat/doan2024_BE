@@ -21,9 +21,9 @@ public class Address {
 
     @Column(name = "city")
     private String city;
-
-    @Column(name = "state")
-    private String state;
+//
+//    @Column(name = "state")
+//    private String state;
 
     @Column(name = "zip_code")
     private String zipCode;
@@ -39,13 +39,13 @@ public class Address {
 
     }
 
-    public Address(Long id, String firstName, String streetAddress, String lastName, String city, String state, String zipCode, User user, String mobile) {
+    public Address(Long id, String firstName, String streetAddress, String lastName, String city,  String zipCode, User user, String mobile) {
         this.id = id;
         this.firstName = firstName;
         this.streetAddress = streetAddress;
         this.lastName = lastName;
         this.city = city;
-        this.state = state;
+
         this.zipCode = zipCode;
         this.user = user;
         this.mobile = mobile;
@@ -89,14 +89,6 @@ public class Address {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public String getCity() {

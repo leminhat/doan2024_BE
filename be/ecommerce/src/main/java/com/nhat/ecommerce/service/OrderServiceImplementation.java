@@ -40,10 +40,17 @@ public class OrderServiceImplementation implements OrderService{
     @Override
     public Order createOrder(User user, Address shippingAddress) {
 
-        shippingAddress.setUser(user);
-        Address address = addressRepository.save(shippingAddress);
-        user.getAddress().add(address);
-        userRepository.save(user);
+        Address address = shippingAddress;
+        System.out.println("shippingAddress " +shippingAddress.getId());
+
+        if (shippingAddress.getId() == null) {
+            System.out.println("da vao day" +shippingAddress.getId());
+            shippingAddress.setUser(user);
+            address = addressRepository.save(shippingAddress);
+            user.getAddress().add(address);
+            userRepository.save(user);
+        }
+
 
         Order createOrder = new Order();
 
@@ -74,20 +81,18 @@ public class OrderServiceImplementation implements OrderService{
         createOrder.setDiscounte(cart.getDiscounte());
         createOrder.setTotalItem(cart.getTotalItem());
 
-        createOrder.setShippingAddress(address);
+        createOrder.setShippingAddress(shippingAddress);
         createOrder.setCreateAt(LocalDateTime.now());
         createOrder.setOrderStatus("PENDING");
         createOrder.getPaymentDetails().setStatus("PENDING");
         createOrder.setCreateAt(LocalDateTime.now());
 
         Order saveOrder = orderRepository.save(createOrder);
-
         for(OrderItem item : orderItems){
             item.setOrder(saveOrder);
             orderItemRepository.save(item);
 
         }
-
         return saveOrder;
     }
 
@@ -108,11 +113,11 @@ public class OrderServiceImplementation implements OrderService{
     }
 
     @Override
-    public Order placeOrder(Long orderId) throws OrderException {
+    public Order placedOrder(Long orderId) throws OrderException {
         Order order = findOrderById(orderId);
         order.setOrderStatus("PLACED");
         order.getPaymentDetails().setStatus("COMPLETED");
-        return order;
+        return orderRepository.save(order);
     }
 
     @Override
@@ -149,8 +154,9 @@ public class OrderServiceImplementation implements OrderService{
     }
 
     @Override
-    public void deleteOrder(Long orderId) throws OrderException {
+    public Order deleteOrder(Long orderId) throws OrderException {
         Order order = findOrderById(orderId);
         orderRepository.deleteById(orderId);
+        return order;
     }
 }

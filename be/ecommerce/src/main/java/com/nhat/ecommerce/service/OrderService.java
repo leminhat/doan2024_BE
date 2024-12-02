@@ -17,7 +17,7 @@ public interface OrderService {
 
     public List<Order> usersOrderHistory(Long userId);
 
-    public Order placeOrder(Long orderId) throws OrderException;
+    public Order placedOrder(Long orderId) throws OrderException;
 
     public Order confirmedOrder(Long orderId) throws OrderException;
 
@@ -29,7 +29,7 @@ public interface OrderService {
 
     public List<Order> getAllOrders();
 
-    public void deleteOrder(Long orderId) throws OrderException;
+    public Order deleteOrder(Long orderId) throws OrderException;
 
 
 }

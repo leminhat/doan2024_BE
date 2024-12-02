@@ -10,15 +10,15 @@ public class CreateProductRequest {
     private String  description;
     private int  price;
     private int  discountedPrice;
-    private int  discountPersent;
+    private int  discountPercent;
     private int  quantity;
     private String  brand;
     private String  color;
     private Set<Size> size  = new HashSet<Size>();
     private String  imageUrl;
-    private String topLavelCategory;
-    private String secondLavelCategory;
-    private String thirdLavelCategory;
+    private String topLevelCategory;
+    private String secondLevelCategory;
+    private String thirdLevelCategory;
 
     public String getTitle() {
         return title;
@@ -52,12 +52,12 @@ public class CreateProductRequest {
         this.discountedPrice = discountedPrice;
     }
 
-    public int getDiscountPersent() {
-        return discountPersent;
+    public int getDiscountPercent() {
+        return discountPercent;
     }
 
-    public void setDiscountPersent(int discountPersent) {
-        this.discountPersent = discountPersent;
+    public void setDiscountPercent(int discountPercent) {
+        this.discountPercent = discountPercent;
     }
 
     public int getQuantity() {
@@ -100,27 +100,27 @@ public class CreateProductRequest {
         this.imageUrl = imageUrl;
     }
 
-    public String getTopLavelCategory() {
-        return topLavelCategory;
+    public String getTopLevelCategory() {
+        return topLevelCategory;
     }
 
-    public void setTopLavelCategory(String topLavelCategory) {
-        this.topLavelCategory = topLavelCategory;
+    public void setTopLevelCategory(String topLevelCategory) {
+        this.topLevelCategory = topLevelCategory;
     }
 
-    public String getSecondLavelCategory() {
-        return secondLavelCategory;
+    public String getSecondLevelCategory() {
+        return secondLevelCategory;
     }
 
-    public void setSecondLavelCategory(String secondLavelCategory) {
-        this.secondLavelCategory = secondLavelCategory;
+    public void setSecondLevelCategory(String secondLevelCategory) {
+        this.secondLevelCategory = secondLevelCategory;
     }
 
-    public String getThirdLavelCategory() {
-        return thirdLavelCategory;
+    public String getThirdLevelCategory() {
+        return thirdLevelCategory;
     }
 
-    public void setThirdLavelCategory(String thirdLavelCategory) {
-        this.thirdLavelCategory = thirdLavelCategory;
+    public void setThirdLevelCategory(String thirdLevelCategory) {
+        this.thirdLevelCategory = thirdLevelCategory;
     }
 }

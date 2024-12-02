@@ -33,7 +33,7 @@ public class OrderController {
 
         Order order = orderService.createOrder(user,shippingAddress);
 
-        System.out.println("order"+order);
+
 
         return new ResponseEntity<Order>(order,HttpStatus.CREATED);
     }
@@ -55,6 +55,7 @@ public class OrderController {
         User user = userService.findUserProfileByJwt(jwt);
 
         Order order = orderService.findOrderById(Id);
+
 
         return new ResponseEntity<>(order,HttpStatus.CREATED);
     }
