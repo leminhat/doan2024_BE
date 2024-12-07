@@ -64,6 +64,13 @@ public class OrderServiceImplementation implements OrderService{
             orderItem.setProduct(item.getProduct());
             orderItem.setQuantity(item.getQuantity());
             orderItem.setSize(item.getSize());
+
+            for (Size size : item.getProduct().getSizes()) {
+                if (size.getName().equals(item.getSize())) {
+                    size.setQuantity(size.getQuantity() - item.getQuantity());
+                }
+            }
+
             orderItem.setUserId(item.getUserId());
             orderItem.setDiscountedPrice(item.getDiscountedPrice());
             orderItem.setOrder(createOrder);
@@ -145,6 +152,14 @@ public class OrderServiceImplementation implements OrderService{
     public Order cancledOrder(Long orderId) throws OrderException {
         Order order = findOrderById(orderId);
         order.setOrderStatus("CANCELLED");
+
+        for(OrderItem item : order.getOrderItems()){
+            for (Size size : item.getProduct().getSizes()) {
+                if (size.getName().equals(item.getSize())) {
+                    size.setQuantity(size.getQuantity() + item.getQuantity());
+                }
+            }
+        }
         return orderRepository.save(order);
     }
 
@@ -156,6 +171,15 @@ public class OrderServiceImplementation implements OrderService{
     @Override
     public Order deleteOrder(Long orderId) throws OrderException {
         Order order = findOrderById(orderId);
+
+//        for(OrderItem item : order.getOrderItems()){
+//            for (Size size : item.getProduct().getSizes()) {
+//                if (size.getName().equals(item.getSize())) {
+//                    size.setQuantity(size.getQuantity() + item.getQuantity());
+//                }
+//            }
+//        }
+
         orderRepository.deleteById(orderId);
         return order;
     }
