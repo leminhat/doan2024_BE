@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class    OrderItem {
+public class  OrderItem {
 
 
     @Id
@@ -15,7 +15,7 @@ public class    OrderItem {
     private Long id;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
 
     private String size;

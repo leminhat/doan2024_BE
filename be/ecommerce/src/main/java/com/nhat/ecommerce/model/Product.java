@@ -41,15 +41,13 @@ public class Product {
     @Column(name = "color")
     private String color;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "sizes")
     private Set<Size> sizes= new HashSet<>();
 
     @Column(name = "image_url")
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Rating> ratings = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
@@ -68,7 +66,7 @@ public class Product {
     }
 
 
-    public Product(String title, String description, int price, int discountedPrice, int discountPersent, int quantity, String brand, String color, Set<Size> sizes, String imageUrl, List<Rating> ratings, long id, List<Review> reviews, int numRatings, Category category, LocalDateTime createAt) {
+    public Product(String title, String description, int price, int discountedPrice, int discountPersent, int quantity, String brand, String color, Set<Size> sizes, String imageUrl,  long id, List<Review> reviews, int numRatings, Category category, LocalDateTime createAt) {
         this.title = title;
         this.description = description;
         this.price = price;
@@ -79,7 +77,6 @@ public class Product {
         this.color = color;
         this.sizes = sizes;
         this.imageUrl = imageUrl;
-        this.ratings = ratings;
         this.id = id;
         this.reviews = reviews;
         this.numRatings = numRatings;
@@ -175,13 +172,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public List<Rating> getRatings() {
-        return ratings;
-    }
 
-    public void setRatings(List<Rating> ratings) {
-        this.ratings = ratings;
-    }
 
     public List<Review> getReviews() {
         return reviews;

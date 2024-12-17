@@ -3,9 +3,14 @@ package com.nhat.ecommerce.controller;
 import com.nhat.ecommerce.config.PaymentConfig;
 import com.nhat.ecommerce.exception.OrderException;
 import com.nhat.ecommerce.model.Order;
+import com.nhat.ecommerce.model.OrderItem;
+import com.nhat.ecommerce.model.Size;
+import com.nhat.ecommerce.repository.OrderRepository;
+import com.nhat.ecommerce.repository.ProductRepository;
 import com.nhat.ecommerce.response.ApiResponse;
 import com.nhat.ecommerce.service.OrderService;
 import com.nhat.ecommerce.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +23,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 @RestController
@@ -30,12 +38,57 @@ public class PaymentController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
 
+    @Transactional
     @PostMapping("/create_payment")
-    public String createPayment(@RequestBody Order order) throws UnsupportedEncodingException {
+    public ResponseEntity<ApiResponse> createPayment(@RequestBody Order order) throws UnsupportedEncodingException {
+
+        System.out.println("da vao create Payment");
+
 
         long amount = order.getToltalDiscountedPrice()*100;
+
+        for (OrderItem item : order.getOrderItems()) {
+
+            for (Size size : item.getProduct().getSizes()) {
+
+                System.out.println("name size" + size.getName());
+                System.out.println("quantity size" + size.getQuantity());
+                    if (size.getName().equals(item.getSize())) {
+                        if(size.getQuantity() - item.getQuantity() < 0){
+                            ApiResponse res = new ApiResponse();
+                            res.setMessage("San pham khong du so luong vui long thu lai sau");
+                            res.setStatus(false);
+                            return new ResponseEntity<>(res, HttpStatus.OK);
+                        }
+                        size.setQuantity(size.getQuantity() - item.getQuantity());
+                        System.out.println(size.getQuantity());
+                    }
+                }
+            productRepository.save(item.getProduct());
+        }
+
+
+
+//        Order order1 = orderRepository.findById(order.getId());
+//        order.setOrderStatus("PENDING");
+//        orderRepository.save(order);
+
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.schedule(() -> {
+            System.out.println("da vao day");
+            try {
+                cancelOrderIfNotPaid(order.getId());
+            } catch (OrderException e) {
+                throw new RuntimeException(e);
+            }
+        }, 1, TimeUnit.MINUTES);
 
         String orderID = String.valueOf(order.getId());
 
@@ -96,7 +149,12 @@ public class PaymentController {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = PaymentConfig.vnp_PayUrl + "?" + queryUrl;
 
-        return paymentUrl;
+        ApiResponse res = new ApiResponse();
+        res.setMessage(paymentUrl);
+        res.setStatus(true);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+
+    //        return paymentUrl;
     }
 
     @PostMapping("/update")
@@ -117,12 +175,24 @@ public class PaymentController {
             res.setStatus(true);
             return new ResponseEntity<>(res, HttpStatus.OK);
         } else {
+            Order order  = orderService.cancledOrder(orderId);
             ApiResponse res = new ApiResponse();
             res.setMessage("Payment Fail");
             res.setStatus(false);
-            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(res, HttpStatus.OK);
         }
 
+    }
+
+    public void cancelOrderIfNotPaid(Long id) throws OrderException {
+            Order order = orderService.findOrderById(id);
+
+            if(order.getOrderStatus().equals("PENDING")){
+
+                Order order1 = orderService.cancledOrder(id);
+                System.out.println("Order1Status " + order1.getOrderStatus());
+
+            }
     }
 
 

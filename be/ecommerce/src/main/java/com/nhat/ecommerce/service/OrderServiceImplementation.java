@@ -3,18 +3,25 @@ package com.nhat.ecommerce.service;
 import com.nhat.ecommerce.exception.OrderException;
 import com.nhat.ecommerce.model.*;
 import com.nhat.ecommerce.repository.*;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class OrderServiceImplementation implements OrderService{
 
-    private AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
+    private final ProductRepository productRepository;
     private UserRepository userRepository;
     private OrderItemRepository orderItemRepository;
     private OrderRepository orderRepository;
@@ -23,10 +30,15 @@ public class OrderServiceImplementation implements OrderService{
     private ProductService productService;
 
 
+
+    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+
+
     @Autowired
     public OrderServiceImplementation(CartService cartService, ProductService productService
             , AddressRepository addressRepository, UserRepository userRepository, OrderItemRepository orderItemRepository
-            , OrderRepository orderRepository){
+            , OrderRepository orderRepository, ProductRepository productRepository){
 
 
         this.cartService = cartService;;
@@ -35,6 +47,7 @@ public class OrderServiceImplementation implements OrderService{
         this.userRepository = userRepository;
         this.orderItemRepository = orderItemRepository;
         this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -57,6 +70,8 @@ public class OrderServiceImplementation implements OrderService{
         Cart cart = cartService.findUserCart(user.getId());
         List<OrderItem> orderItems = new ArrayList<>();
 
+
+
         for (CartItem item:cart.getCartItems()){
             OrderItem orderItem = new OrderItem();
 
@@ -65,11 +80,11 @@ public class OrderServiceImplementation implements OrderService{
             orderItem.setQuantity(item.getQuantity());
             orderItem.setSize(item.getSize());
 
-            for (Size size : item.getProduct().getSizes()) {
-                if (size.getName().equals(item.getSize())) {
-                    size.setQuantity(size.getQuantity() - item.getQuantity());
-                }
-            }
+//            for (Size size : item.getProduct().getSizes()) {
+//                if (size.getName().equals(item.getSize())) {
+//                    size.setQuantity(size.getQuantity() - item.getQuantity());
+//                }
+//            }
 
             orderItem.setUserId(item.getUserId());
             orderItem.setDiscountedPrice(item.getDiscountedPrice());
@@ -100,6 +115,11 @@ public class OrderServiceImplementation implements OrderService{
             orderItemRepository.save(item);
 
         }
+
+
+
+
+
         return saveOrder;
     }
 
@@ -150,16 +170,29 @@ public class OrderServiceImplementation implements OrderService{
 
     @Override
     public Order cancledOrder(Long orderId) throws OrderException {
-        Order order = findOrderById(orderId);
-        order.setOrderStatus("CANCELLED");
 
-        for(OrderItem item : order.getOrderItems()){
-            for (Size size : item.getProduct().getSizes()) {
-                if (size.getName().equals(item.getSize())) {
-                    size.setQuantity(size.getQuantity() + item.getQuantity());
+        Order order = findOrderById(orderId);
+        if(!order.getOrderStatus().equals("CANCELLED")) {
+
+
+            for (OrderItem item : order.getOrderItems()) {
+                System.out.println("da vao day 2");
+                for (Size size : item.getProduct().getSizes()) {
+                    System.out.println("size name " + size.getName());
+                    if (size.getName().equals(item.getSize())) {
+                        System.out.println("quantity: " + size.getQuantity());
+                        size.setQuantity(size.getQuantity() + item.getQuantity());
+                        System.out.println("quantitysau: " + size.getQuantity());
+
+                    }
+                    productRepository.save(item.getProduct());
                 }
             }
+
+
+            order.setOrderStatus("CANCELLED");
         }
+
         return orderRepository.save(order);
     }
 

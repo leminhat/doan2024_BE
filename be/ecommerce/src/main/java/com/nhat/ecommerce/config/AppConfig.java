@@ -27,6 +27,7 @@ public class AppConfig {
                         .requestMatchers("/auth/signin**").permitAll()
                         .requestMatchers("/auth/signup**").permitAll()
                         .requestMatchers("/auth/reset-password**").permitAll()
+                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
                         .anyRequest().authenticated())
 //
 //                        .requestMatchers("/api/**").authenticated())

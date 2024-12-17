@@ -12,15 +12,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
 import javax.swing.*;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 public class JwtValidator extends OncePerRequestFilter {
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -36,10 +40,11 @@ public class JwtValidator extends OncePerRequestFilter {
 
                 String email = String.valueOf(claims.get("email"));
 
-                String authorities = String.valueOf(claims.get("authorities"));
+                String roles = claims.get("roles", String.class);
 
-                List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
-                Authentication authentication = new UsernamePasswordAuthenticationToken(email,null,auths);
+//                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(roles);
+
+                Authentication authentication = new UsernamePasswordAuthenticationToken(email,null,  AuthorityUtils.commaSeparatedStringToAuthorityList(roles));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }catch (Exception e){

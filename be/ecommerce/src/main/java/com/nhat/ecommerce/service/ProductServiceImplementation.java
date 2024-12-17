@@ -100,16 +100,60 @@ public class ProductServiceImplementation implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Long productId, Product req) throws ProductException {
+    public Product updateProduct(Long productId, CreateProductRequest req) throws ProductException {
 
         Product product = findProductById(productId);
 
-        if(req.getQuantity()!=0){
-            product.setQuantity(req.getQuantity());
+
+
+        Category topLevel = categoryRepository.findByName(req.getTopLevelCategory());
+        if (topLevel == null) {
+            Category topLevelCategory = new Category();
+            topLevelCategory.setName(req.getTopLevelCategory());
+            topLevelCategory.setLevel(1);
+
+            topLevel = categoryRepository.save(topLevelCategory);
         }
 
+        Category secondLevel = categoryRepository.findByNameAndParent(req.getSecondLevelCategory(),topLevel.getName());
+        if (secondLevel == null) {
+            Category secondLevelCategory = new Category();
+            secondLevelCategory.setName(req.getSecondLevelCategory());
+            secondLevelCategory.setParentCategory(topLevel);
+            secondLevelCategory.setLevel(2);
 
-        return productRepository.save(product);
+            secondLevel= categoryRepository.save(secondLevelCategory);
+        }
+
+        Category thirdLevel = categoryRepository.findByNameAndParent(req.getThirdLevelCategory(),secondLevel.getName());
+        if (thirdLevel == null) {
+            Category thirdLevelCategory = new Category();
+            thirdLevelCategory.setName(req.getThirdLevelCategory());
+            thirdLevelCategory.setParentCategory(secondLevel);
+            thirdLevelCategory.setLevel(3);
+
+            thirdLevel= categoryRepository.save(thirdLevelCategory);
+        }
+
+        product.setCategory(thirdLevel);
+        product.setDescription(req.getDescription());
+        product.setTitle(req.getTitle());
+        product.setColor(req.getColor());
+        product.setDiscountedPrice(req.getDiscountedPrice());
+        product.setDiscountPersent(req.getDiscountPercent());
+        product.setImageUrl(req.getImageUrl());
+        product.setBrand(req.getBrand());
+        product.setPrice(req.getPrice());
+        product.setSizes(req.getSize());
+        product.setQuantity(req.getQuantity());
+        product.setCreateAt(LocalDateTime.now());
+
+        Product savedProduct = productRepository.save(product);
+        return savedProduct;
+
+
+
+//        return productRepository.save(product);
     }
 
     @Override
