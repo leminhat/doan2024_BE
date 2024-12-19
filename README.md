@@ -1,2 +1,2 @@
 # doan2024
-linh file doc PTTK : https://docs.google.com/document/d/1bkMxWp_p5E7XNfeKHqodNdZju9APmDe8J5DErmUwieM/edit?tab=t.0
+https://docs.google.com/document/d/1823zmRhCby8DxPsjr4ec4P4muiUms3qt/edit
