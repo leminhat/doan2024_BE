@@ -2,16 +2,20 @@ package com.nhat.ecommerce.controller;
 
 import com.nhat.ecommerce.config.PaymentConfig;
 import com.nhat.ecommerce.exception.OrderException;
+import com.nhat.ecommerce.exception.ProductException;
 import com.nhat.ecommerce.model.Order;
 import com.nhat.ecommerce.model.OrderItem;
+import com.nhat.ecommerce.model.Product;
 import com.nhat.ecommerce.model.Size;
 import com.nhat.ecommerce.repository.OrderRepository;
 import com.nhat.ecommerce.repository.ProductRepository;
 import com.nhat.ecommerce.response.ApiResponse;
 import com.nhat.ecommerce.service.OrderService;
+import com.nhat.ecommerce.service.ProductService;
 import com.nhat.ecommerce.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +48,13 @@ public class PaymentController {
     private OrderRepository orderRepository;
 
 
+    @Autowired
+    private ProductService productService;
+
+
     @Transactional
     @PostMapping("/create_payment")
-    public ResponseEntity<ApiResponse> createPayment(@RequestBody Order order) throws UnsupportedEncodingException {
+    public ResponseEntity<ApiResponse> createPayment(@RequestBody Order order) throws UnsupportedEncodingException, ProductException {
 
         System.out.println("da vao create Payment");
 
@@ -55,7 +63,9 @@ public class PaymentController {
 
         for (OrderItem item : order.getOrderItems()) {
 
-            for (Size size : item.getProduct().getSizes()) {
+            Product product = productService.findProductById(item.getProduct().getId());
+
+            for (Size size : product.getSizes()) {
 
                 System.out.println("name size" + size.getName());
                 System.out.println("quantity size" + size.getQuantity());
@@ -70,14 +80,8 @@ public class PaymentController {
                         System.out.println(size.getQuantity());
                     }
                 }
-            productRepository.save(item.getProduct());
+            productRepository.save(product);
         }
-
-
-
-//        Order order1 = orderRepository.findById(order.getId());
-//        order.setOrderStatus("PENDING");
-//        orderRepository.save(order);
 
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

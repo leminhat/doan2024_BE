@@ -86,7 +86,7 @@ public class User {
         this.lastname = lastname;
     }
 
-    public String getPassword() {
+    public String   getPassword() {
         return password;
     }
 

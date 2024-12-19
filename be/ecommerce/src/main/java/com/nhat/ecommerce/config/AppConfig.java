@@ -23,6 +23,7 @@ public class AppConfig {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests(Authorize -> Authorize
+                        .requestMatchers("/api/products**").permitAll()
                         .requestMatchers("/auth/forgotpass**").permitAll()
                         .requestMatchers("/auth/signin**").permitAll()
                         .requestMatchers("/auth/signup**").permitAll()
