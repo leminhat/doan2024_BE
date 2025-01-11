@@ -116,10 +116,6 @@ public class OrderServiceImplementation implements OrderService{
 
         }
 
-
-
-
-
         return saveOrder;
     }
 
@@ -176,17 +172,15 @@ public class OrderServiceImplementation implements OrderService{
 
 
             for (OrderItem item : order.getOrderItems()) {
-                System.out.println("da vao day 2");
                 for (Size size : item.getProduct().getSizes()) {
-                    System.out.println("size name " + size.getName());
+                    System.out.println("Truoc size name " + size.getName() +" "+ String.valueOf(size.getQuantity()));
                     if (size.getName().equals(item.getSize())) {
-                        System.out.println("quantity: " + size.getQuantity());
                         size.setQuantity(size.getQuantity() + item.getQuantity());
-                        System.out.println("quantitysau: " + size.getQuantity());
-
+                        System.out.println("Sau size name " + size.getName() +" "+ String.valueOf(size.getQuantity()+item.getQuantity()));
                     }
-                    productRepository.save(item.getProduct());
+
                 }
+                productRepository.save(item.getProduct());
             }
 
 

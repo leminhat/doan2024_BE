@@ -37,10 +37,6 @@ public class OrderController {
 
         Order order = orderService.createOrder(user,shippingAddress);
 
-
-
-
-
         return new ResponseEntity<Order>(order,HttpStatus.CREATED);
     }
 

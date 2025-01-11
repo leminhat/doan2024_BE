@@ -84,15 +84,15 @@ public class PaymentController {
         }
 
 
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(() -> {
-            System.out.println("da vao day");
-            try {
-                cancelOrderIfNotPaid(order.getId());
-            } catch (OrderException e) {
-                throw new RuntimeException(e);
-            }
-        }, 1, TimeUnit.MINUTES);
+//        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+//        scheduler.schedule(() -> {
+//            System.out.println("da vao day");
+//            try {
+//                cancelOrderIfNotPaid(order.getId());
+//            } catch (OrderException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }, 1, TimeUnit.MINUTES);
 
         String orderID = String.valueOf(order.getId());
 
